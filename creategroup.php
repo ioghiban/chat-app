@@ -30,34 +30,24 @@
         try {
             $db = new PDO('sqlite:database.db');
             //if (':groupId' != '' and 'groupName' != '') {
-            // $insertGroup = "INSERT INTO groups (id, groupname) VALUES
-            // (:groupId, :groupName)";
-            // $stmt = $db->prepare($insertGroup);
+            $insertGroup = "INSERT INTO groups (id, groupname) VALUES
+            (:groupId, :groupName)";
+            $stmt = $db->prepare($insertGroup);
 
-            $stmt = $db->query("SELECT MAX(id) FROM groups");
-            $groups = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            foreach($groups as $row => $group){
-                $lastId = $group['id'];
+            $groupid = uniqid();
+            $stmt->bindValue(':groupId', $groupid, PDO::PARAM_INT);
+
+
+            $groupname = filter_input(INPUT_POST, 'groupName');
+            $stmt->bindValue(':groupName', $groupname, PDO::PARAM_STR);
+
+            $success = $stmt->execute();
+            if($success){
+                echo "Group created successfully.";
+            } else {
+                echo "Sorry, could not add group.";
             }
 
-            print_r($lastId);
-
-            // $groupid = $lastId + 1;
-            // $stmt->bindValue(':groupId', $groupid, PDO::PARAM_INT);
-
-
-            // $groupname = filter_input(INPUT_POST, 'groupName');
-            // $stmt->bindValue(':groupName', $groupname, PDO::PARAM_STR);
-
-            // $success = $stmt->execute();
-            // if($success){
-            //     echo "Group created successfully.";
-            // } else {
-            //     echo "Sorry, could not add group.";
-            // }
-
-            //}
             $db = null;
         } catch (PDOException $e) {
             print "Encountered an error: " . $e->getMessage() . "<br>";
