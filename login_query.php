@@ -5,8 +5,11 @@
 	if(ISSET($_POST['login'])){
 		$username = $_POST['username'];
 		$password = $_POST['password'];
+
+		$_SESSION['username'] = $username;
 		
-		$query = "SELECT COUNT(*) as count FROM `users` WHERE `username` = :username AND `password` = :password";
+		$query = "SELECT COUNT(*) as count FROM `users` 
+		WHERE `username` = :username AND `password` = :password";
 		$stmt = $conn->prepare($query);
 		$stmt->bindParam(':username', $username);
 		$stmt->bindParam(':password', $password);

@@ -38,11 +38,11 @@
                 if(ISSET($_SESSION['success'])){
             ?>
             <?php echo $_SESSION['success']?>
-                <?php
-                    unset($_SESSION['success']);
-                    }
-                ?>
-                <button name="register">Register</button>
+            <?php
+                unset($_SESSION['success']);
+                }
+            ?>
+            <button name="register">Sign up</button>
         </form>	
     </body>
 </html>

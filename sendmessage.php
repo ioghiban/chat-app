@@ -1,57 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">  
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign up</title>
-    <style>
-        label, input{ display:block; }
-        input{ padding:5px; }
-    </style>
-</head>
-<body>
+<?php
 
-    <?php
-        if (!isset($_POST['submit'])) {
-    ?>
+    session_start();
+    require_once 'conn.php';
 
-    <form action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
-        <label for="content">Enter message:</label> <br>
-        <input type="text" name ="newMsg" required> <br>
+    if (ISSET($_POST['submit'])) {
+        $content = $_POST['content'];
 
-        <input type="submit" name="submit">
-    </form>
+        $query = "INSERT INTO messages (id, user_name, group_id, content) VALUES
+        (:msgid, :username, :groupid, :content)";
+        $stmt = $conn->prepare($query);
 
-    <?php
-    } else {
-        try {
-            $db = new PDO('sqlite:database.db');
-            $newId = "SELECT MAX(id) AS greatest_id FROM messages";
+        $msgid = uniqid();
+        $stmt->bindValue(':msgid', $msgid, PDO::PARAM_INT);
+        
+        $username = $_SESSION['username'];
+        $stmt->bindValue(':username', $username, PDO::PARAM_STR);
 
-            $username = $_SESSION["username"];
+        $groupid = $_SESSION['group_id'];
+        $stmt->bindValue(':groupid', $groupid, PDO::PARAM_INT);
 
-            $insertMsg = "INSERT INTO messages (id, user_name, group_id, content) VALUES
-            (:newId, :username, :id, :newMsg)";
-            $stmt = $db->prepare($insertMsg);
+        $content = filter_input(INPUT_POST, 'content');
+        $stmt->bindValue(':content', $content, PDO::PARAM_STR);
 
-            $user = filter_input(INPUT_POST, 'userName');
-            $stmt->bindValue(':userName', $username, PDO::PARAM_STR);
-
-            $password = filter_input(INPUT_POST, 'passWord');
-            $stmt->bindValue(':passWord', $password, PDO::PARAM_STR);
-
-                $success = $stmt->execute();
-                if($success){
-                    echo "User created successfully.";
-                } else {
-                    echo "Sorry, could not create user.";
-                }
-            $db = null;
-        } catch (PDOException $e) {
-            print "Encountered an error: " . $e->getMessage() . "<br>";
-            die();
+        $success = $stmt->execute();
+        if($success){
+            echo "Message sent successfully.";
+        } else {
+            echo "Sorry, could not send message.";
         }
     }
-    ?>
-</body>
+?>

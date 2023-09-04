@@ -1,51 +1,88 @@
-<?php
-    $db = new PDO('sqlite:database.db');
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <meta charset="UTF-8">  
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group details</title>
+	</head>
+    <body>
 
-    try {
-        $query = "SELECT * FROM groups WHERE id = :groupId";
-        $stmt = $db->prepare($query);
-        $id = filter_input(INPUT_GET, 'id');
-        $stmt->bindValue(':groupId', $id, PDO::PARAM_INT);
-        $stmt->execute();
-        $r = $stmt->fetch();
+    <?php
+        session_start();
+	    require_once 'conn.php';
 
-        $stmt = $db->query("SELECT * FROM messages WHERE group_id = $id");
-        $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $query = "SELECT * FROM groups WHERE id = :groupid";
+            $stmt = $conn->prepare($query);
+            $groupid = filter_input(INPUT_GET, 'id');
+            $_SESSION['group_id'] = $groupid;
+            $stmt->bindValue(':groupid', $groupid, PDO::PARAM_INT);
+            $stmt->execute();
+            $r = $stmt->fetch();
 
-        $db = null;
+            if ($r) {
+                $username = $_SESSION['username'];
 
-        if (!$r){
-            echo "No group found.";
-            exit();
+                $query = "SELECT COUNT(*) as count FROM `userGroup` 
+                WHERE `group_id` = :groupid AND `user_name` = :username";
+                $stmt = $conn->prepare($query);
+                $stmt->bindValue(':groupid', $groupid, PDO::PARAM_INT);
+                $stmt->bindValue(':username', $username, PDO::PARAM_STR);
+
+                $stmt->execute();
+                $row = $stmt->fetch();
+                
+                $count = $row['count'];
+                if($count > 0){
+                    $stmt = $conn->query("SELECT * FROM messages WHERE group_id = $groupid");
+                    $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                    $conn = null;
+                } else {
+                    header('location:joingroup.php');
+                }
+
+                if (!$messages){
+                    echo "No message found.";
+                    exit();
+                }
+            } else {
+                echo "No group found.";
+                exit();
+            }
+            
+        } catch (PDOException $e) {
+            print "Encountered an error: " . $e->getMessage() . "<br>";
+            die();
         }
 
-        if (!$messages){
-            echo "No message found.";
-            exit();
-        }
+    ?>
+    <a href="grouplist.php">Back to all groups...</a>
+
+    <h1><?php echo htmlspecialchars( "Messages in: " . $r['groupname'])?></h1>
         
-    } catch (PDOException $e) {
-        print "Encountered an error: " . $e->getMessage() . "<br>";
-        die();
-    }
+    <?php
+        echo "<table border=1>";
 
-?>
-
-<h1><?php echo htmlspecialchars($r['id'] . " : " . $r['groupname'])?></h1>
-    
-<?php
-    echo "<table border=1>";
-
-    echo "<tr>";
-        echo "<td>Sender</td>";
-        echo "<td>Message</td>";
-    echo "</tr>";
-
-    foreach($messages as $row => $message){
         echo "<tr>";
-            echo "<td>" . $message['user_name'] . "</td>";
-            echo "<td>" . $message['content'] . "</td>";
+            echo "<td>Sender</td>";
+            echo "<td>Message</td>";
         echo "</tr>";
-    }
-    echo "</table>";
-?>
+
+        foreach($messages as $row => $message){
+            echo "<tr>";
+                echo "<td>" . $message['user_name'] . "</td>";
+                echo "<td>" . $message['content'] . "</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+    ?>
+    <form method="POST" action="sendmessage.php">	
+        <div class="form-group">
+            <input type="text" name="content" class="form-control" required="required"/>
+        </div>
+        <button name="submit">Send</button>
+    </form>	
+</body>
+</html>
