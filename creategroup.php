@@ -1,13 +1,13 @@
 <?php
 
     session_start();
-    require_once 'conn.php';
+    require_once 'includes/config.php';
 
     if (ISSET($_POST['submit'])) {
         try {
             $query = "INSERT INTO groups (id, groupname) VALUES
             (:groupid, :groupname)";
-            $stmt = $conn->prepare($query);
+            $stmt = $db->prepare($query);
 
             $groupid = uniqid();
             $stmt->bindValue(':groupid', $groupid, PDO::PARAM_INT);
@@ -22,7 +22,7 @@
                 echo "Sorry, could not add group.";
             }
 
-            $conn = null;
+            $db = null;
         } catch (PDOException $e) {
             print "Encountered an error: " . $e->getMessage() . "<br>";
             die();

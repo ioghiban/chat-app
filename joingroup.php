@@ -29,7 +29,7 @@
 
     <?php
         session_start();
-        require_once 'conn.php';
+        require_once 'includes/config.php';
 
         $agree = filter_input(INPUT_POST, 'agree', FILTER_SANITIZE_STRING);
 
@@ -41,7 +41,7 @@
                 try {
                     $query = "INSERT INTO userGroup (user_name, group_name) VALUES
                     (:username, :groupname)";
-                    $stmt = $conn->prepare($query);
+                    $stmt = $db->prepare($query);
 
                     $username = $_SESSION['username'];
                     $stmt->bindValue(':usrname', $username, PDO::PARAM_STR);
@@ -57,7 +57,7 @@
                         echo "Sorry, could not add group.";
                     }
 
-                    $conn = null;
+                    $db = null;
                 } catch (PDOException $e) {
                     print "Encountered an error: " . $e->getMessage() . "<br>";
                     die();

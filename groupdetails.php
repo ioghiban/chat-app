@@ -10,11 +10,11 @@
 
     <?php
         session_start();
-	    require_once 'conn.php';
+	    require_once 'includes/config.php';
 
         try {
             $query = "SELECT * FROM groups WHERE id = :groupid";
-            $stmt = $conn->prepare($query);
+            $stmt = $db->prepare($query);
             $groupid = filter_input(INPUT_GET, 'id');
             $_SESSION['group_id'] = $groupid;
             $stmt->bindValue(':groupid', $groupid, PDO::PARAM_INT);
@@ -26,7 +26,7 @@
 
                 $query = "SELECT COUNT(*) as count FROM `userGroup` 
                 WHERE `group_id` = :groupid AND `user_name` = :username";
-                $stmt = $conn->prepare($query);
+                $stmt = $db->prepare($query);
                 $stmt->bindValue(':groupid', $groupid, PDO::PARAM_INT);
                 $stmt->bindValue(':username', $username, PDO::PARAM_STR);
 
@@ -35,10 +35,10 @@
                 
                 $count = $row['count'];
                 if($count > 0){
-                    $stmt = $conn->query("SELECT * FROM messages WHERE group_id = $groupid");
+                    $stmt = $db->query("SELECT * FROM messages WHERE group_id = $groupid");
                     $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                    $conn = null;
+                    $db = null;
                 } else {
                     header('location:joingroup.php');
                 }

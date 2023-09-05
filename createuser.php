@@ -1,14 +1,14 @@
 <?php
 	session_start();
 
-	require_once 'conn.php';
+	require_once 'includes/config.php';
 	
 	if(ISSET($_POST['register'])){
 		$username = $_POST['username'];
 		$password = $_POST['password'];
 		
 		$query = "INSERT INTO `users` (username, password) VALUES(:username, :password)";
-		$stmt = $conn->prepare($query);
+		$stmt = $db->prepare($query);
 		$stmt->bindParam(':username', $username);
 		$stmt->bindParam(':password', $password);
 		

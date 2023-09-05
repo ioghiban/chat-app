@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	require_once 'conn.php';
+	require_once 'includes/config.php';
 	
 	if(ISSET($_POST['login'])){
 		$username = $_POST['username'];
@@ -10,7 +10,7 @@
 		
 		$query = "SELECT COUNT(*) as count FROM `users` 
 		WHERE `username` = :username AND `password` = :password";
-		$stmt = $conn->prepare($query);
+		$stmt = $db->prepare($query);
 		$stmt->bindParam(':username', $username);
 		$stmt->bindParam(':password', $password);
 		$stmt->execute();

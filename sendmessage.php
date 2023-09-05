@@ -1,14 +1,14 @@
 <?php
 
     session_start();
-    require_once 'conn.php';
+    require_once 'includes/config.php';
 
     if (ISSET($_POST['submit'])) {
         $content = $_POST['content'];
 
         $query = "INSERT INTO messages (id, user_name, group_id, content) VALUES
         (:msgid, :username, :groupid, :content)";
-        $stmt = $conn->prepare($query);
+        $stmt = $db->prepare($query);
 
         $msgid = uniqid();
         $stmt->bindValue(':msgid', $msgid, PDO::PARAM_INT);

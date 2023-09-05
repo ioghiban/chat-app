@@ -9,9 +9,9 @@
 <body>
     <?php
         session_start();
-        require_once 'conn.php';
+        require_once 'includes/config.php';
 
-        $stmt = $conn->query("SELECT * FROM groups");
+        $stmt = $db->query("SELECT * FROM groups");
         $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         echo "<ul>";
