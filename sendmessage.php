@@ -3,30 +3,25 @@
     session_start();
     require_once 'includes/config.php';
 
-    if (ISSET($_POST['submit'])) {
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         $content = $_POST['content'];
-
-        $query = "INSERT INTO messages (id, user_name, group_id, content) VALUES
-        (:msgid, :username, :groupid, :content)";
-        $stmt = $db->prepare($query);
-
-        $msgid = uniqid();
-        $stmt->bindValue(':msgid', $msgid, PDO::PARAM_INT);
-        
         $username = $_SESSION['username'];
-        $stmt->bindValue(':username', $username, PDO::PARAM_STR);
-
         $groupid = $_SESSION['group_id'];
-        $stmt->bindValue(':groupid', $groupid, PDO::PARAM_INT);
 
-        $content = filter_input(INPUT_POST, 'content');
-        $stmt->bindValue(':content', $content, PDO::PARAM_STR);
+        try {
+            $query = "INSERT INTO messages (user_name, group_id, content) VALUES (:username, :groupid, :content)";
+            $stmt = $db->prepare($query);
+            $stmt->bindValue(':username', $username, PDO::PARAM_STR);
+            $stmt->bindValue(':groupid', $groupid, PDO::PARAM_INT);
+            $stmt->bindValue(':content', $content, PDO::PARAM_STR);
+            $stmt->execute();
 
-        $success = $stmt->execute();
-        if($success){
-            echo "Message sent successfully.";
-        } else {
-            echo "Sorry, could not send message.";
+            // Redirect back to the same page after sending the message
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit();
+        } catch (PDOException $e) {
+            print "Encountered an error: " . $e->getMessage() . "<br>";
+            die();
         }
     }
 ?>

@@ -7,6 +7,7 @@
     <title>All groups</title>
 	</head>
 <body>
+    <a href="login.php">Logout</a>
     <?php
         session_start();
         require_once 'includes/config.php';

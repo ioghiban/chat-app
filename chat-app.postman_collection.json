@@ -38,7 +38,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"user_name\": \"ioghiban\",\n    \"group_id\":  \"1\",\n    \"content\": \"bunaa\"\n}"
+					"raw": "{\n    \"user_name\": \"alice\",\n    \"group_id\":  \"1\",\n    \"content\": \"hellooo\"\n}"
 				},
 				"url": {
 					"raw": "localhost:3000/api/create.php?Content-Type=application/json",

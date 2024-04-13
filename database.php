@@ -28,7 +28,7 @@
     }
 
     $insertUser1 =<<<EOF
-        INSERT INTO users VALUES ('ioghiban', 'ilikemushrooms10');
+        INSERT INTO users VALUES ('alice', 'ilikemushrooms10');
     EOF;
 
     $retUser1 = $db->exec($insertUser1);
@@ -39,7 +39,7 @@
     }
 
     $insertUser2 =<<<EOF
-        INSERT INTO users VALUES ('miki.s', 'idontlikemushrooms13');
+        INSERT INTO users VALUES ('bob', 'idontlikemushrooms13');
     EOF;
 
     $retUser2 = $db->exec($insertUser2);
@@ -94,7 +94,7 @@
     }
 
     $insertMessage1 =<<<EOF
-        INSERT INTO messages VALUES ('1', 'ioghiban', '1', 'buna!')
+        INSERT INTO messages VALUES ('1', 'alice', '1', 'hi!')
     EOF;
     
     $retMessage1 = $db->exec($insertMessage1);
@@ -105,7 +105,7 @@
     }
 
     $insertMessage2 =<<<EOF
-        INSERT INTO messages VALUES ('2', 'ioghiban', '1', 'ce faci?')
+        INSERT INTO messages VALUES ('2', 'alice', '1', 'wassup')
     EOF;
 
     $retMessage2 = $db->exec($insertMessage2);
@@ -116,7 +116,7 @@
     }
 
     $insertMessage3 =<<<EOF
-        INSERT INTO messages VALUES ('3', 'miki.s', '1', 'bine, tu?')
+        INSERT INTO messages VALUES ('3', 'bob', '1', 'im fine, you?')
     EOF;
 
     $retMessage3 = $db->exec($insertMessage3);
@@ -143,7 +143,7 @@
     }
 
     $insertUser1Group1 =<<<EOF
-        INSERT INTO userGroup VALUES ('ioghiban', '1')
+        INSERT INTO userGroup VALUES ('alice', '1')
     EOF;
 
     $retUser1Group1 = $db->exec($insertUser1Group1);
@@ -154,7 +154,7 @@
     }
 
     $insertUser2Group1 =<<<EOF
-        INSERT INTO userGroup VALUES ('miki.s', '1')
+        INSERT INTO userGroup VALUES ('bob', '1')
     EOF;
 
     $retUser2Group1 = $db->exec($insertUser2Group1);

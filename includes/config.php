@@ -15,4 +15,28 @@
         password TEXT NOT NULL)";
 
 	$db->exec($query);
+
+	$query = "CREATE TABLE IF NOT EXISTS groups 
+		(id INTEGER PRIMARY KEY AUTOINCREMENT,
+		groupname TEXT NOT NULL)";
+
+	$db->exec($query);
+
+	$query = "CREATE TABLE IF NOT EXISTS userGroup 
+		(user_name TEXT NOT NULL,
+		group_id INTEGER NOT NULL,
+		FOREIGN KEY (user_name) REFERENCES users(username),
+		FOREIGN KEY (group_id) REFERENCES groups(id))";
+
+	$db->exec($query);
+
+	$query = "CREATE TABLE IF NOT EXISTS messages
+		(id INTEGER PRIMARY KEY AUTOINCREMENT,
+		user_name TEXT NOT NULL,
+		group_id INTEGER NOT NULL,
+		content TEXT NOT NULL,
+		FOREIGN KEY (user_name) REFERENCES users(username),
+		FOREIGN KEY (group_id) REFERENCES groups(id))";
+
+	$db->exec($query);
 ?>
